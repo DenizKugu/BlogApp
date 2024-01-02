@@ -1,0 +1,44 @@
+﻿@model PostsViewModel
+
+<h1>Post List</h1>
+
+<div class="row">
+	<div class="col-lg-8">
+		<div class="bg-white p-4">
+			<h1>Posts</h1>
+
+			@foreach (var item in Model.Posts)
+			{
+				<div class="card bg-transparent border-0 mb-3">
+					<div class="row">
+						<div class="col-4">
+							<img src="~/img/@item.Image" class="img-fluid rounded">
+						</div>
+						<div class="col-8">
+							<h5><a href="/post/detay/@item.Url" class="btn-link fw-bold text-decoration-none">@item.Title</a></h5>
+							<p>
+								@item.Description
+
+							</p>
+						</div>
+					</div>
+				</div>
+				<hr style="height:5px;"/>
+				
+			}
+			<nav>
+				<ul class="pagination">
+					<li class="page-item"><a href="#" class="page-link">1</a></li>
+					<li class="page-item"><a href="#" class="page-link">2</a></li>
+					<li class="page-item"><a href="#" class="page-link">3</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<vc:tags-menu></vc:tags-menu>
+		<vc:new-posts></vc:new-posts>
+
+	</div>
+</div>
+

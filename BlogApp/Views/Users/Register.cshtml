@@ -1,0 +1,37 @@
+﻿@model RegisterViewsModel
+
+<div class="row">
+	<div class="border border-2">
+		<h1 class="mb-3">Register</h1>
+		<form action="Register" method="post">
+			<div asp-validation-summary="ModelOnly"></div>
+			<div class="mb-3">
+				<label asp-for="UserName" class="form-label"></label>
+				<input type="text" name="UserName" id="UserName" class="form-control" />
+				<span asp-validation-for="UserName" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="Name" class="form-label"></label>
+				<input type="text" name="Name" id="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="Email" class="form-label"></label>
+				<input type="email" name="Email" id="Email" class="form-control" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="Password" class="form-label"></label>
+				<input type="password" name="Password" id="Password" class="form-control" />
+				<span asp-validation-for="Password" class="text-danger"></span>
+			</div>
+			<div class="mb-3">
+				<label asp-for="ConfirmPassword" class="form-label"></label>
+				<input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" />
+				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+			</div>
+			<button type="submit" class="btn btn-primary mb-3">Register</button>
+		</form>
+	</div>
+
+</div>

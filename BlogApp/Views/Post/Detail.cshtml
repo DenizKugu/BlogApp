@@ -1,0 +1,127 @@
+﻿@model Post
+
+<div class="row">
+	<div class="col-lg-8">
+		<div class="bg-white p-4">
+			<h1>@Model.Title</h1>
+			<div class="tag">
+				@foreach(var tag in Model.Tags)
+				{
+					<a href="/post/tag/@tag.Url" class="badge bg-@tag.Color bg-opacity-10 text-@tag.Color mb-2 fw-bold">@tag.Text</a>
+				}
+			</div>
+			
+			<img src="~/img/@Model.Image" class="img-fluid rounded">
+
+			<ul class="list-inline my-3">
+				<li class="list-inline-item"><i class="bi bi-calendar"></i> @Model.PublishTime.ToString("d")</li>
+				<li class="list-inline-item"><i class="bi bi-person-circle"></i> 
+					<a href="/profile/@Model.User.UserName">@Model.User.Name</a></li>
+			</ul>
+			<hr />
+			<div>
+				@Html.Raw(@Model.Content)
+			</div>
+		</div>
+		
+		<div class="bg-white mt-3">
+			<div class="card border-0">
+				<div class="card-header pb-0">
+					<h4><span id="commentCount">@Model.Comments.Count()</span> adet yorum</h4>
+				</div>
+				<div id="comments">
+
+				
+					@foreach(var comment in Model.Comments)
+					{
+						<div class="card-body">
+							<div class="my-4 d-flex">
+								<img style="width:100px;height:100px;" src="/img/@comment.User.Image" class=" rounded-circle float-start me-3"/>
+								<div class="mb-2">
+									<h5><a href="/profile/@comment.User.UserName">@comment.User.UserName</a></h5>
+									<span>@comment.PublishedOn</span>
+									<p class="mt-2">
+										@comment.Text
+									</p>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+				@if (User.Identity!.IsAuthenticated)
+				{
+					<hr class="my-4" />
+					<div>
+						<h4 class="mb-3">Yorum Ekle</h4>
+						<form action="/post/AddComment" method="post">
+							<input type="hidden" id="PostId" name="PostId" value="@Model.PostId" />
+
+							<div class="col-md-12">
+								<textarea type="text" rows="3" name="Text" id="Text" class="form-control"></textarea>
+							</div>
+							<div class="col-md-12 mt-2">
+								<button id="btnCommentSave" type="submit" class="btn btn-primary">Kaydet</button>
+							</div>
+						</form>
+					</div>
+				}
+				else
+				{
+					<p>Yorum yapmak için lütfen oturum açınız <a class="text-decoration-none" href="/users/login">Login</a></p>
+				}
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4">
+		<vc:tags-menu></vc:tags-menu>
+		<vc:new-posts></vc:new-posts>
+
+	</div>
+</div>
+
+@section Scripts {
+	<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+	<script  type="text/javascript">
+
+		$(document).ready(function(){
+				
+			$("#btnCommentSave").click(function(){
+				$.ajax({
+					type:"POST",
+					url: '@Url.Action("AddComment")',
+					dataType: 'json',
+					data: {
+						PostId:$("#PostId").val(),
+						UserName:$("#UserName").val(),
+						Text:$("#Text").val(),
+					},
+					success: function(yorum){
+						let date = new Date(yorum.publishedOn)
+						$("#comments").append(`<div class="card-body">
+								<div class="my-4 d-flex">
+									<img style="width:100px;height:100px;" src="/img/${yorum.avatar}" class=" rounded-circle float-start me-3"/>
+									<div class="mb-2">
+										<h5>${yorum.username}</h5>
+										<span>`+date.toLocaleDateString()+`</span>
+										<p class="mt-2">${yorum.text}</p>
+									</div>
+								</div>
+							</div>
+							`);
+						$("#UserName").val('')
+						$("#Text").val('')
+
+						
+						let count=+($("#commentCount").text());
+						$("#commentCount").text(count+1)
+					}
+					
+				});
+				return false;
+			});
+			
+
+		});
+
+	</script>
+}
